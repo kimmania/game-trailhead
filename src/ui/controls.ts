@@ -63,6 +63,17 @@ export function showWinBanner(show: boolean): void {
   if (el) el.classList.toggle('hidden', !show);
 }
 
+export function showToast(message: string): void {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  const timeout = window.setTimeout(() => {
+    toast.remove();
+    window.clearTimeout(timeout);
+  }, 2200);
+}
+
 function removeHelp(): void {
   const dialog = document.getElementById('help-dialog');
   if (dialog) dialog.remove();
@@ -86,7 +97,7 @@ export function openHelp(): void {
       </ul>
 
       <h3>Example trail (4×4)</h3>
-      <p class="help-caption">Start at the green cell, follow the trail to the blue cell.</p>
+      <p class="help-caption">Start at the gold <strong>1</strong> cell, follow the trail to the green <strong>16</strong> cell.</p>
       <div class="help-example">
         <div class="help-grid" style="grid-template-columns:repeat(4,1fr)">
           <div class="help-cell trail-start">1</div>

@@ -404,6 +404,21 @@ body {
   color: var(--text-dim);
 }
 
+.toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface-light);
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  z-index: 200;
+  pointer-events: none;
+  border: 1px solid var(--grid-line);
+}
+
 /* Responsive: wider screens */
 @media (min-width: 768px) {
   .game-area {

@@ -17,6 +17,7 @@ import {
   toggleAdjacencyLabel,
   openHelp,
   closeHelp,
+  showToast,
 } from './ui/controls';
 import { bindNumberPad, updateNumberPad } from './ui/number-pad';
 
@@ -70,6 +71,7 @@ class TrailheadApp {
         setDifficulty(last as Difficulty);
       }
       await this.newGame();
+      showToast('New game started! Tap a cell and choose a number.');
     }
 
     this.startTimer();

@@ -89,6 +89,7 @@ export function openHelp(): void {
       <h2>How to play Trailhead</h2>
       <p>Fill the grid with a continuous trail of numbers from 1 to N (where N is the number of cells). Each number must be adjacent to the next in sequence.</p>
       <ul>
+        <li>The grid does <strong>not wrap</strong>. Moving off an edge does not continue on the opposite side.</li>
         <li><strong>Tap</strong> a cell, then choose a number from the pad.</li>
         <li><strong>Undo</strong> reverts your last placement(s).</li>
         <li><strong>Trace</strong> draws lines between all placed consecutive numbers.</li>

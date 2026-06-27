@@ -68,10 +68,6 @@ body {
   align-items: center;
 }
 
-.timer {
-  font-variant-numeric: tabular-nums;
-}
-
 .controls {
   display: flex;
   flex-wrap: wrap;

@@ -26,8 +26,6 @@ export function resetGameState(state: GameState): void {
   }
   state.history = [];
   state.won = false;
-  state.startTime = Date.now();
-  state.elapsed = 0;
   state.hintCount = 0;
   state.traceMode = false;
   state.selected = null;

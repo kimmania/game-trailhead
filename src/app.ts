@@ -13,7 +13,6 @@ import {
   showWinBanner,
   updateDifficultyLabel,
   updatePuzzleId,
-  updateTimer,
   toggleAdjacencyLabel,
   openHelp,
   closeHelp,
@@ -26,7 +25,6 @@ class TrailheadApp {
   private state: GameState | null = null;
   private board = createBoard(document.getElementById('board')!);
   private loading = false;
-  private timerInterval: ReturnType<typeof setInterval> | null = null;
 
   async init(): Promise<void> {
     // Preload easy puzzles
@@ -68,8 +66,8 @@ class TrailheadApp {
     const saved = loadSavedGame();
     if (saved && !saved.won) {
       this.state = saved;
-      setDifficulty(saved.puzzle.id.split('-')[0] as Difficulty);
-      this.refresh(false);
+      toggleDrawButton(this.state.drawMode);
+      this.refresh(true);
     } else {
       const last = localStorage.getItem(LAST_DIFFICULTY_KEY);
       if (last && DIFFICULTIES.includes(last as Difficulty)) {
@@ -78,8 +76,6 @@ class TrailheadApp {
       await this.newGame();
       showToast('New game started! Tap a cell and choose a number.');
     }
-
-    this.startTimer();
 
     if (!localStorage.getItem('trailhead-has-seen-help')) {
       openHelp();
@@ -330,18 +326,6 @@ class TrailheadApp {
     }
   }
 
-  private startTimer(): void {
-    if (this.timerInterval) clearInterval(this.timerInterval);
-    this.timerInterval = setInterval(() => {
-      if (this.state && !this.state.won) {
-        const total = this.state.elapsed + (Date.now() - this.state.startTime);
-        const mins = Math.floor(total / 60000);
-        const secs = Math.floor((total % 60000) / 1000);
-        updateTimer(`${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`);
-      }
-    }, 1000);
-  }
-
   private refresh(render: boolean): void {
     if (!this.state) return;
     if (render) {
@@ -373,7 +357,6 @@ class TrailheadApp {
 
     if (!this.state.won && isWin(this.state)) {
       this.state.won = true;
-      this.state.elapsed += Date.now() - this.state.startTime;
       showWinBanner(true);
       clearSavedGame();
       renderBoard(this.board, this.state);

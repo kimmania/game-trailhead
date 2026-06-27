@@ -5,7 +5,6 @@ const SAVE_KEY = 'trailhead-save';
 interface SavedGame {
   puzzle: TrailPuzzle;
   grid: (number | null)[][];
-  elapsed: number;
   hintCount: number;
   drawMode: boolean;
 }
@@ -14,7 +13,6 @@ export function saveGame(state: GameState): void {
   const saved: SavedGame = {
     puzzle: state.puzzle,
     grid: state.grid,
-    elapsed: state.elapsed + (Date.now() - state.startTime),
     hintCount: state.hintCount,
     drawMode: state.drawMode,
   };
@@ -32,10 +30,8 @@ export function loadSavedGame(): GameState | null {
     const saved: SavedGame = JSON.parse(raw);
     const state = createGameState(saved.puzzle);
     state.grid = saved.grid.map((row) => [...row]);
-    state.elapsed = saved.elapsed;
     state.hintCount = saved.hintCount;
-    state.drawMode = saved.drawMode ?? false;
-    state.startTime = Date.now();
+    state.drawMode = saved.drawMode ?? true;
     return state;
   } catch {
     return null;
@@ -59,8 +55,6 @@ export function createGameState(puzzle: TrailPuzzle): GameState {
     selected: null,
     history: [],
     won: false,
-    startTime: Date.now(),
-    elapsed: 0,
     hintCount: 0,
     traceMode: false,
     drawMode: true,

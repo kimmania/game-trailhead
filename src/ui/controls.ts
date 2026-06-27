@@ -62,11 +62,6 @@ export function updatePuzzleId(id: string): void {
   if (el) el.textContent = `ID: ${id}`;
 }
 
-export function updateTimer(text: string): void {
-  const el = document.getElementById('timer');
-  if (el) el.textContent = text;
-}
-
 export function toggleAdjacencyLabel(adjacency: number): void {
   const el = document.getElementById('adjacency-toggle');
   if (el) el.textContent = `${adjacency}-way`;

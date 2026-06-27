@@ -31,8 +31,6 @@ export interface GameState {
   selected: { row: number; col: number } | null;
   history: (number | null)[][][];
   won: boolean;
-  startTime: number;
-  elapsed: number;
   hintCount: number;
   traceMode: boolean;
   drawMode: boolean;

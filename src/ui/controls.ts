@@ -111,6 +111,15 @@ export function openHelp(): void {
         <li><strong>Hint</strong> reveals one correct cell.</li>
       </ul>
 
+      <h3>🎨 Draw mode</h3>
+      <p>Use the <strong>🎨 Draw</strong> button to toggle between <em>tap</em> and <em>drag</em> input:</p>
+      <ul>
+        <li><strong>Tap mode</strong> (default): select a cell, then pick a number.</li>
+        <li><strong>Drag mode</strong>: click and drag from an empty cell. The game auto-fills numbers as you trace the trail step by step.</li>
+        <li>Givens cannot be overwritten — the draw simply won't start on those cells.</li>
+        <li><strong>Undo</strong> reverts an entire drag stroke at once.</li>
+      </ul>
+
       <h3>Example trail (4×4)</h3>
       <p class="help-caption">Start at the gold <strong>1</strong> cell, follow the trail to the green <strong>16</strong> cell.</p>
       <div class="help-example">

@@ -228,6 +228,7 @@ body {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   min-height: 0;
+  aspect-ratio: 1 / 1;
 }
 
 .cell.given {

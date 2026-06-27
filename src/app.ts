@@ -112,6 +112,7 @@ class TrailheadApp {
       const difficulty = getSelectedDifficulty();
       localStorage.setItem(LAST_DIFFICULTY_KEY, difficulty);
       this.state = await startNewGame(difficulty);
+      toggleDrawButton(this.state.drawMode);
       this.refresh(true);
     } catch (err) {
       console.error(err);
@@ -244,6 +245,8 @@ class TrailheadApp {
 
   private handleDrawStart(row: number, col: number): void {
     if (!this.state || this.state.won) return;
+    const isGiven = this.state.puzzle.givens.some((g) => g.x === col && g.y === row);
+    if (isGiven) return; // never start a draw on a given cell
     this.stashUndo();
     this.drawPath = [[row, col]];
     const nextVal = this.findNextValue();

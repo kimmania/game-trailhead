@@ -72,12 +72,8 @@ class TrailheadApp {
       await this.newGame();
     }
 
-    if (!localStorage.getItem('trailhead-has-seen-help')) {
-      openHelp();
-      localStorage.setItem('trailhead-has-seen-help', '1');
-    }
-
     this.startTimer();
+    openHelp();
   }
 
   private hasProgress(): boolean {

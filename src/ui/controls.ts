@@ -84,9 +84,33 @@ export function openHelp(): void {
         <li><strong>Auto-Fill</strong> fills cells where the path is forced.</li>
         <li><strong>Hint</strong> reveals one correct cell.</li>
       </ul>
+
+      <h3>Example trail (4×4)</h3>
+      <p class="help-caption">Start at the green cell, follow the trail to the blue cell.</p>
+      <div class="help-example">
+        <div class="help-grid" style="grid-template-columns:repeat(4,1fr)">
+          <div class="help-cell trail-start">1</div>
+          <div class="help-cell">2</div>
+          <div class="help-cell">3</div>
+          <div class="help-cell">4</div>
+          <div class="help-cell">8</div>
+          <div class="help-cell">7</div>
+          <div class="help-cell">6</div>
+          <div class="help-cell">5</div>
+          <div class="help-cell">9</div>
+          <div class="help-cell">10</div>
+          <div class="help-cell">11</div>
+          <div class="help-cell">12</div>
+          <div class="help-cell trail-end">16</div>
+          <div class="help-cell">15</div>
+          <div class="help-cell">14</div>
+          <div class="help-cell">13</div>
+        </div>
+      </div>
+
       <h3>Rules</h3>
       <ul>
-        <li>Every number k must be adjacent (4-way or 8-way depending on difficulty) to both k-1 and k+1.</li>
+        <li>Every number k must be adjacent (4-way or 8-way depending on difficulty) to both k–1 and k+1.</li>
         <li>Givens are fixed; you cannot change them.</li>
       </ul>
       <p>Numbers surrounded in red conflict with adjacency or uniqueness constraints.</p>

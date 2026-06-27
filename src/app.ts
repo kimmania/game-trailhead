@@ -73,7 +73,11 @@ class TrailheadApp {
     }
 
     this.startTimer();
-    openHelp();
+
+    if (!localStorage.getItem('trailhead-has-seen-help')) {
+      openHelp();
+      localStorage.setItem('trailhead-has-seen-help', '1');
+    }
   }
 
   private hasProgress(): boolean {

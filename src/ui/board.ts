@@ -9,35 +9,65 @@ export function bindBoardInteractions(
   board: BoardElements,
   onSelect: (row: number, col: number) => void,
   onLongPress: (row: number, col: number) => void,
+  onDrawStart?: (row: number, col: number) => void,
+  onDrawStep?: (row: number, col: number) => void,
+  onDrawEnd?: () => void,
+  getDrawMode?: () => boolean,
 ): void {
   let longPressTimer: ReturnType<typeof setTimeout> | null = null;
   let startRow = -1;
   let startCol = -1;
   let touchMoved = false;
+  let isDrawing = false;
+  let lastDrawCell: [number, number] | null = null;
 
-  board.root.addEventListener('pointerdown', (e) => {
+  function getCellFromPointer(e: PointerEvent): [number, number] | null {
     const target = e.target as HTMLElement | null;
-    if (!target) return;
+    if (!target) return null;
     const cell = target.closest('[data-row]') as HTMLElement | null;
-    if (!cell) return;
+    if (!cell) return null;
     const row = Number(cell.dataset.row);
     const col = Number(cell.dataset.col);
-    if (Number.isNaN(row) || Number.isNaN(col)) return;
+    if (Number.isNaN(row) || Number.isNaN(col)) return null;
+    return [row, col];
+  }
+
+  board.root.addEventListener('pointerdown', (e) => {
+    const cell = getCellFromPointer(e);
+    if (!cell) return;
+    const [row, col] = cell;
     startRow = row;
     startCol = col;
     touchMoved = false;
+
+    const drawMode = getDrawMode?.() ?? false;
+    if (drawMode && onDrawStart) {
+      isDrawing = true;
+      lastDrawCell = [row, col];
+      onDrawStart(row, col);
+      return;
+    }
+
     longPressTimer = setTimeout(() => {
       longPressTimer = null;
       onLongPress(row, col);
     }, 500);
   });
 
-  board.root.addEventListener('pointermove', () => {
+  board.root.addEventListener('pointermove', (e) => {
     touchMoved = true;
     if (longPressTimer) {
       clearTimeout(longPressTimer);
       longPressTimer = null;
     }
+
+    if (!isDrawing || !onDrawStep || !getDrawMode) return;
+    const cell = getCellFromPointer(e);
+    if (!cell) return;
+    const [row, col] = cell;
+    if (lastDrawCell && lastDrawCell[0] === row && lastDrawCell[1] === col) return;
+    lastDrawCell = [row, col];
+    onDrawStep(row, col);
   });
 
   const clearTimer = () => {
@@ -48,19 +78,31 @@ export function bindBoardInteractions(
   };
 
   board.root.addEventListener('pointerup', (e) => {
-    const target = e.target as HTMLElement | null;
-    if (!target) { clearTimer(); return; }
-    const cell = target.closest('[data-row]') as HTMLElement | null;
+    const cell = getCellFromPointer(e);
     clearTimer();
+
+    if (isDrawing) {
+      isDrawing = false;
+      lastDrawCell = null;
+      onDrawEnd?.();
+      return;
+    }
+
     if (!cell) return;
-    const row = Number(cell.dataset.row);
-    const col = Number(cell.dataset.col);
+    const [row, col] = cell;
     if (row === startRow && col === startCol && !touchMoved) {
       onSelect(row, col);
     }
   });
 
-  board.root.addEventListener('pointercancel', clearTimer);
+  board.root.addEventListener('pointercancel', () => {
+    clearTimer();
+    if (isDrawing) {
+      isDrawing = false;
+      lastDrawCell = null;
+      onDrawEnd?.();
+    }
+  });
 }
 
 function getPathCells(state: GameState): Set<string> {
@@ -82,8 +124,6 @@ function getPathCells(state: GameState): Set<string> {
     if (Math.abs(r2 - r1) <= 1 && Math.abs(c2 - c1) <= 1) {
       set.add(`${r1},${c1}`);
       set.add(`${r2},${c2}`);
-      // Bresenham minimal step for neighboring cells
-      // Since cells are adjacent by at most 1, we just mark both ends
     }
   }
   return set;
@@ -116,6 +156,7 @@ export function renderBoard(board: BoardElements, state: GameState): void {
     board.root.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
   }
 
+  board.root.classList.toggle('draw-active', state.drawMode);
   const pathCells = state.traceMode || won ? getPathCells(state) : new Set<string>();
 
   for (let r = 0; r < rows; r++) {

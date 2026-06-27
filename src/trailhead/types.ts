@@ -36,6 +36,7 @@ export interface GameState {
   hintCount: number;
   traceMode: boolean;
   usedAutoFill: boolean;
+  drawMode: boolean;
 }
 
 export interface BoardElements {

@@ -18,6 +18,7 @@ import {
   openHelp,
   closeHelp,
   showToast,
+  toggleDrawButton,
 } from './ui/controls';
 import { bindNumberPad, updateNumberPad } from './ui/number-pad';
 
@@ -35,6 +36,10 @@ class TrailheadApp {
       this.board,
       (row, col) => this.handleSelect(row, col),
       (row, col) => this.handleLongPress(row, col),
+      (row, col) => this.handleDrawStart(row, col),
+      (row, col) => this.handleDrawStep(row, col),
+      () => this.handleDrawEnd(),
+      () => this.getDrawMode(),
     );
 
     bindControlHandlers({
@@ -43,6 +48,7 @@ class TrailheadApp {
       onUndo: () => this.handleUndo(),
       onHelp: openHelp,
       onTrace: () => this.toggleTrace(),
+      onDrawToggle: () => this.toggleDrawMode(),
       onDifficultyChange: () => void this.newGame(),
       onHint: () => this.handleHint(),
     });
@@ -210,6 +216,77 @@ class TrailheadApp {
     if (!this.state) return;
     this.state.traceMode = !this.state.traceMode;
     this.refresh(true);
+  }
+
+  // ---- Draw mode (drag-to-draw path) ---------------------------
+  private drawPath: [number, number][] = [];
+
+  private toggleDrawMode(): void {
+    if (!this.state) return;
+    this.state.drawMode = !this.state.drawMode;
+    toggleDrawButton(this.state.drawMode);
+    if (!this.state.drawMode) {
+      this.drawPath = [];
+    }
+  }
+
+  private getDrawMode(): boolean {
+    return this.state?.drawMode ?? false;
+  }
+
+  private isAdjacent(a: [number, number], b: [number, number]): boolean {
+    const { adjacency } = this.state!.puzzle;
+    const dr = Math.abs(a[0] - b[0]);
+    const dc = Math.abs(a[1] - b[1]);
+    if (adjacency === 4) return (dr === 1 && dc === 0) || (dr === 0 && dc === 1);
+    return dr <= 1 && dc <= 1;
+  }
+
+  private handleDrawStart(row: number, col: number): void {
+    if (!this.state || this.state.won) return;
+    this.stashUndo();
+    this.drawPath = [[row, col]];
+    const nextVal = this.findNextValue();
+    if (nextVal !== null) {
+      this.state.grid[row][col] = nextVal;
+      this.refresh(true);
+    }
+  }
+
+  private handleDrawStep(row: number, col: number): void {
+    if (!this.state || this.state.won || this.drawPath.length === 0) return;
+    const last = this.drawPath[this.drawPath.length - 1];
+    if (last[0] === row && last[1] === col) return;
+    if (!this.isAdjacent(last, [row, col])) return;
+    // Prevent loops: disallow revisiting cells already in this drawsession
+    if (this.drawPath.some(([r, c]) => r === row && c === col)) return;
+    const isGiven = this.state.puzzle.givens.some((g) => g.x === col && g.y === row);
+    if (isGiven) return; // never overwrite givens
+    const nextVal = this.findNextValue();
+    if (nextVal === null) return;
+    this.drawPath.push([row, col]);
+    this.state.grid[row][col] = nextVal;
+    this.refresh(true);
+  }
+
+  private handleDrawEnd(): void {
+    this.drawPath = [];
+  }
+
+  private findNextValue(): number | null {
+    if (!this.state) return null;
+    const { rows, cols } = this.state.puzzle;
+    const N = rows * cols;
+    const placed = new Set<number>();
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (this.state.grid[r][c] !== null) placed.add(this.state.grid[r][c]!);
+      }
+    }
+    for (let v = 1; v <= N; v++) {
+      if (!placed.has(v)) return v;
+    }
+    return null;
   }
 
   private handleKeydown(e: KeyboardEvent): void {

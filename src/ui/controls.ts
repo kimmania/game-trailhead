@@ -6,6 +6,7 @@ export function bindControlHandlers(handlers: {
   onUndo: () => void;
   onHelp: () => void;
   onTrace: () => void;
+  onDrawToggle: () => void;
   onDifficultyChange: () => void;
   onHint: () => void;
 }): void {
@@ -14,8 +15,21 @@ export function bindControlHandlers(handlers: {
   document.getElementById('undo')?.addEventListener('click', handlers.onUndo);
   document.getElementById('help')?.addEventListener('click', handlers.onHelp);
   document.getElementById('trace')?.addEventListener('click', handlers.onTrace);
+  document.getElementById('draw')?.addEventListener('click', handlers.onDrawToggle);
   document.getElementById('difficulty')?.addEventListener('change', handlers.onDifficultyChange);
   document.getElementById('hint')?.addEventListener('click', handlers.onHint);
+}
+
+export function toggleDrawButton(active: boolean): void {
+  const btn = document.getElementById('draw');
+  if (!btn) return;
+  if (active) {
+    btn.classList.add('active-draw');
+    btn.textContent = '🎨 Draw On';
+  } else {
+    btn.classList.remove('active-draw');
+    btn.textContent = '🎨 Draw';
+  }
 }
 
 export function getSelectedDifficulty(): Difficulty {

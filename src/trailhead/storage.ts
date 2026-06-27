@@ -63,6 +63,6 @@ export function createGameState(puzzle: TrailPuzzle): GameState {
     elapsed: 0,
     hintCount: 0,
     traceMode: false,
-    drawMode: false,
+    drawMode: true,
   };
 }

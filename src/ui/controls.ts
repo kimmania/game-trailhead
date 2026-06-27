@@ -113,8 +113,8 @@ export function openHelp(): void {
       <h3>🎨 Draw mode</h3>
       <p>Use the <strong>🎨 Draw</strong> button to toggle between <em>tap</em> and <em>drag</em> input:</p>
       <ul>
-        <li><strong>Tap mode</strong> (default): select a cell, then pick a number.</li>
-        <li><strong>Drag mode</strong>: click and drag from an empty cell. The game auto-fills numbers as you trace the trail step by step.</li>
+        <li><strong>Draw mode</strong> (default): click and drag from an empty cell. The game auto-fills numbers as you trace the trail.</li>
+        <li><strong>Tap mode</strong>: select a cell, then pick a number.</li>
         <li>Givens cannot be overwritten — the draw simply won't start on those cells.</li>
         <li><strong>Undo</strong> reverts an entire drag stroke at once.</li>
       </ul>

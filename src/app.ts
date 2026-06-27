@@ -2,7 +2,7 @@ import type { Difficulty, GameState } from './trailhead/types';
 import { DIFFICULTIES, LAST_DIFFICULTY_KEY } from './trailhead/types';
 import { clearSavedGame, loadSavedGame } from './trailhead/storage';
 import { fetchBank, resetGameState, startNewGame } from './trailhead/puzzle';
-import { deduceForcedCells, getConflicts, isWin } from './trailhead/validator';
+import { getConflicts, isWin } from './trailhead/validator';
 import { bindBoardInteractions, createBoard, renderBoard } from './ui/board';
 import {
   bindControlHandlers,
@@ -55,7 +55,6 @@ class TrailheadApp {
 
     bindNumberPad({
       onClear: () => this.handleNumberPadClear(),
-      onAutoFill: () => this.handleAutoFill(),
     });
 
     window.addEventListener('trailhead-number', ((e: CustomEvent<{ value: number }>) => {
@@ -172,18 +171,6 @@ class TrailheadApp {
     if (isGiven) return;
     this.stashUndo();
     this.state.grid[row][col] = null;
-    this.refresh(true);
-  }
-
-  private handleAutoFill(): void {
-    if (!this.state || this.state.won) return;
-    this.state.usedAutoFill = true;
-    const forced = deduceForcedCells(this.state);
-    if (forced.length === 0) return;
-    this.stashUndo();
-    for (const { row, col, value } of forced) {
-      this.state.grid[row][col] = value;
-    }
     this.refresh(true);
   }
 

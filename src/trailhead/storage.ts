@@ -7,7 +7,6 @@ interface SavedGame {
   grid: (number | null)[][];
   elapsed: number;
   hintCount: number;
-  usedAutoFill: boolean;
   drawMode: boolean;
 }
 
@@ -17,7 +16,6 @@ export function saveGame(state: GameState): void {
     grid: state.grid,
     elapsed: state.elapsed + (Date.now() - state.startTime),
     hintCount: state.hintCount,
-    usedAutoFill: state.usedAutoFill,
     drawMode: state.drawMode,
   };
   try {
@@ -36,7 +34,6 @@ export function loadSavedGame(): GameState | null {
     state.grid = saved.grid.map((row) => [...row]);
     state.elapsed = saved.elapsed;
     state.hintCount = saved.hintCount;
-    state.usedAutoFill = saved.usedAutoFill;
     state.drawMode = saved.drawMode ?? false;
     state.startTime = Date.now();
     return state;
@@ -66,7 +63,6 @@ export function createGameState(puzzle: TrailPuzzle): GameState {
     elapsed: 0,
     hintCount: 0,
     traceMode: false,
-    usedAutoFill: false,
     drawMode: false,
   };
 }

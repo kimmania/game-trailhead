@@ -35,7 +35,6 @@ export interface GameState {
   elapsed: number;
   hintCount: number;
   traceMode: boolean;
-  usedAutoFill: boolean;
   drawMode: boolean;
 }
 

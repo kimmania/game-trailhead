@@ -107,7 +107,6 @@ export function openHelp(): void {
         <li><strong>Tap</strong> a cell, then choose a number from the pad.</li>
         <li><strong>Undo</strong> reverts your last placement(s).</li>
         <li><strong>Trace</strong> draws lines between all placed consecutive numbers.</li>
-        <li><strong>Auto-Fill</strong> fills cells where the path is forced.</li>
         <li><strong>Hint</strong> reveals one correct cell.</li>
       </ul>
 

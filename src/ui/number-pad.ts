@@ -4,7 +4,6 @@ export function updateNumberPad(state: GameState): void {
   const header = document.getElementById('number-pad-header');
   const gridEl = document.getElementById('number-pad-grid');
   const clearBtn = document.getElementById('np-clear') as HTMLButtonElement | null;
-  const autoBtn = document.getElementById('np-auto') as HTMLButtonElement | null;
 
   if (!header || !gridEl) return;
 
@@ -13,12 +12,10 @@ export function updateNumberPad(state: GameState): void {
     header.textContent = 'Select a cell';
     gridEl.innerHTML = '';
     if (clearBtn) clearBtn.disabled = true;
-    if (autoBtn) autoBtn.disabled = true;
     return;
   }
 
   if (clearBtn) clearBtn.disabled = false;
-  if (autoBtn) autoBtn.disabled = false;
 
   const { row, col } = selected;
   const isGiven = puzzle.givens.some((g) => g.x === col && g.y === row);
@@ -62,8 +59,6 @@ export function updateNumberPad(state: GameState): void {
 
 export function bindNumberPad(handlers: {
   onClear: () => void;
-  onAutoFill: () => void;
 }): void {
   document.getElementById('np-clear')?.addEventListener('click', handlers.onClear);
-  document.getElementById('np-auto')?.addEventListener('click', handlers.onAutoFill);
 }

@@ -1,0 +1,102 @@
+import type { Difficulty } from '../trailhead/types';
+
+export function bindControlHandlers(handlers: {
+  onNewGame: () => void;
+  onReset: () => void;
+  onUndo: () => void;
+  onHelp: () => void;
+  onTrace: () => void;
+  onDifficultyChange: () => void;
+  onHint: () => void;
+}): void {
+  document.getElementById('new-game')?.addEventListener('click', handlers.onNewGame);
+  document.getElementById('reset')?.addEventListener('click', handlers.onReset);
+  document.getElementById('undo')?.addEventListener('click', handlers.onUndo);
+  document.getElementById('help')?.addEventListener('click', handlers.onHelp);
+  document.getElementById('trace')?.addEventListener('click', handlers.onTrace);
+  document.getElementById('difficulty')?.addEventListener('change', handlers.onDifficultyChange);
+  document.getElementById('hint')?.addEventListener('click', handlers.onHint);
+}
+
+export function getSelectedDifficulty(): Difficulty {
+  const el = document.getElementById('difficulty') as HTMLSelectElement;
+  return (el?.value || 'easy') as Difficulty;
+}
+
+export function setDifficulty(d: Difficulty): void {
+  const el = document.getElementById('difficulty') as HTMLSelectElement | null;
+  if (el) el.value = d;
+}
+
+export function setUndoEnabled(enabled: boolean): void {
+  const el = document.getElementById('undo') as HTMLButtonElement | null;
+  if (el) el.disabled = !enabled;
+}
+
+export function setHintEnabled(enabled: boolean): void {
+  const el = document.getElementById('hint') as HTMLButtonElement | null;
+  if (el) el.disabled = !enabled;
+}
+
+export function updateDifficultyLabel(text: string): void {
+  const el = document.getElementById('difficulty-label');
+  if (el) el.textContent = text;
+}
+
+export function updatePuzzleId(id: string): void {
+  const el = document.getElementById('puzzle-id');
+  if (el) el.textContent = `ID: ${id}`;
+}
+
+export function updateTimer(text: string): void {
+  const el = document.getElementById('timer');
+  if (el) el.textContent = text;
+}
+
+export function toggleAdjacencyLabel(adjacency: number): void {
+  const el = document.getElementById('adjacency-toggle');
+  if (el) el.textContent = `${adjacency}-way`;
+}
+
+export function showWinBanner(show: boolean): void {
+  const el = document.getElementById('win-banner');
+  if (el) el.classList.toggle('hidden', !show);
+}
+
+function removeHelp(): void {
+  const dialog = document.getElementById('help-dialog');
+  if (dialog) dialog.remove();
+}
+
+export function openHelp(): void {
+  removeHelp();
+  const overlay = document.createElement('div');
+  overlay.id = 'help-dialog';
+  overlay.className = 'help-overlay';
+  overlay.innerHTML = `
+    <div class="help-inner">
+      <h2>How to play Trailhead</h2>
+      <p>Fill the grid with a continuous trail of numbers from 1 to N (where N is the number of cells). Each number must be adjacent to the next in sequence.</p>
+      <ul>
+        <li><strong>Tap</strong> a cell, then choose a number from the pad.</li>
+        <li><strong>Undo</strong> reverts your last placement(s).</li>
+        <li><strong>Trace</strong> draws lines between all placed consecutive numbers.</li>
+        <li><strong>Auto-Fill</strong> fills cells where the path is forced.</li>
+        <li><strong>Hint</strong> reveals one correct cell.</li>
+      </ul>
+      <h3>Rules</h3>
+      <ul>
+        <li>Every number k must be adjacent (4-way or 8-way depending on difficulty) to both k-1 and k+1.</li>
+        <li>Givens are fixed; you cannot change them.</li>
+      </ul>
+      <p>Numbers surrounded in red conflict with adjacency or uniqueness constraints.</p>
+      <button type="button" id="close-help" class="btn btn-primary" style="margin-top:8px">Got it</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  document.getElementById('close-help')?.addEventListener('click', removeHelp);
+}
+
+export function closeHelp(): void {
+  removeHelp();
+}

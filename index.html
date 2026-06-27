@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Trailhead" />
+    <meta name="theme-color" content="#1a2e1a" />
+    <meta
+      name="description"
+      content="Trailhead — a path-completion puzzle. Fill consecutive numbers in a continuous trail."
+    />
+    <link rel="apple-touch-icon" href="/game-trailhead/icons/apple-touch-icon.png" />
+    <title>Trailhead</title>
+  </head>
+  <body>
+    <div id="app">
+      <header class="header">
+        <h1 class="title">Trailhead</h1>
+        <div class="status-bar">
+          <span id="difficulty-label" class="difficulty-label">Easy</span>
+          <span id="timer" class="timer">00:00</span>
+        </div>
+      </header>
+
+      <section class="controls">
+        <label class="difficulty-label">
+          <span class="sr-only">Difficulty</span>
+          <select id="difficulty" class="difficulty-select">
+            <option value="tutorial">Tutorial (5×5)</option>
+            <option value="easy">Easy (6×6)</option>
+            <option value="medium">Medium (8×8)</option>
+            <option value="hard">Hard (10×10)</option>
+            <option value="expert">Expert (10×10 4-way)</option>
+            <option value="master">Master (12×12 4-way)</option>
+          </select>
+        </label>
+        <div class="adjacency-toggle" id="adjacency-toggle" title="Adjacency mode">8-way</div>
+        <button type="button" id="new-game" class="btn btn-primary">New Game</button>
+        <button type="button" id="undo" class="btn" disabled>Undo</button>
+        <button type="button" id="reset" class="btn">Reset</button>
+        <button type="button" id="trace" class="btn">Trace</button>
+        <button type="button" id="hint" class="btn">Hint</button>
+        <button type="button" id="help" class="btn">Help</button>
+      </section>
+
+      <div id="win-banner" class="win-banner hidden" role="status" aria-live="polite">
+        <strong>Trail complete!</strong>
+        <div class="win-actions">
+          <button type="button" id="play-again" class="btn btn-primary">Play Again</button>
+          <a
+            href="https://kimmania.github.io/games-overview/"
+            rel="noopener noreferrer"
+            target="_blank"
+            class="btn btn-secondary"
+            >More Games →</a>
+        </div>
+      </div>
+
+      <main class="game-area">
+        <div class="board-wrap">
+          <div id="board" class="board" role="grid" aria-label="Trailhead board"></div>
+        </div>
+        <div class="number-pad" id="number-pad">
+          <div class="number-pad-header" id="number-pad-header">Select a cell</div>
+          <div class="number-pad-grid" id="number-pad-grid"></div>
+          <div class="number-pad-actions">
+            <button type="button" id="np-clear" class="btn">Clear</button>
+            <button type="button" id="np-auto" class="btn btn-primary">Auto-Fill</button>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <span id="puzzle-id" class="puzzle-id"></span>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

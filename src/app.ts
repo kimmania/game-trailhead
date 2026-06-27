@@ -117,8 +117,9 @@ class TrailheadApp {
 
   private handleReset(): void {
     if (!this.state) return;
+    if (this.state.history.length === 0) return;
     resetGameState(this.state);
-    this.refresh(false);
+    this.refresh(true);
   }
 
   private stashUndo(): void {
